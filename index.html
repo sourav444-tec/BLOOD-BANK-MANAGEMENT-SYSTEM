@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Bank Management System</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <i class="fas fa-tint"></i>
+          <span>LifeStream Blood Bank</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li>
+            <button class="login-btn" onclick="openLoginModal()">Login</button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Login Modal -->
+      <div id="loginModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeLoginModal()">&times;</span>
+          <h2>Login</h2>
+          <!-- Contact Form -->
+          <form
+            id="contactForm"
+            class="login-form"
+            onsubmit="handleContactSubmit(event)"
+          >
+            <div class="login-toggle">
+              <button
+                type="button"
+                class="toggle-btn active"
+                onclick="toggleLoginMethod('email')"
+              >
+                Email
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                onclick="toggleLoginMethod('mobile')"
+              >
+                Mobile
+              </button>
+            </div>
+            <div id="emailField" class="form-group">
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter Email"
+                required
+              />
+            </div>
+            <div id="mobileField" class="form-group" style="display: none">
+              <input
+                type="tel"
+                id="loginMobile"
+                placeholder="Enter Mobile Number"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required
+              />
+            </div>
+            <button type="submit" class="submit-button">Send OTP</button>
+          </form>
+          <!-- OTP Form -->
+          <form
+            id="otpForm"
+            class="login-form"
+            onsubmit="handleOTPVerification(event)"
+            style="display: none"
+          >
+            <div class="form-group">
+              <input
+                type="text"
+                id="otpInput"
+                placeholder="Enter OTP"
+                required
+                pattern="[0-9]{6}"
+                maxlength="6"
+              />
+              <div class="otp-info">
+                <p id="otpSentTo">OTP sent to your contact</p>
+                <button type="button" class="resend-btn" onclick="resendOTP()">
+                  Resend OTP
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="submit-button">Verify OTP</button>
+          </form>
+          <p class="login-footer">
+            Don't have an account?
+            <a href="#" onclick="openSignupModal()">Sign up</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Signup Modal -->
+      <div id="signupModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeSignupModal()">&times;</span>
+          <h2>Sign Up</h2>
+          <form class="login-form" onsubmit="handleSignup(event)">
+            <div class="form-group">
+              <input type="text" placeholder="Full Name" required />
+            </div>
+            <div class="form-group">
+              <input type="email" placeholder="Email" required />
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" required />
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Confirm Password" required />
+            </div>
+            <button type="submit" class="submit-button">Sign Up</button>
+          </form>
+          <p class="login-footer">
+            Already have an account?
+            <a href="#" onclick="openLoginModal()">Login</a>
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section id="home" class="hero slide-section">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <h1>Save Lives Through Blood Donation</h1>
+        <p>Your donation can make a difference in someone's life</p>
+        <a href="#donate" class="cta-button">Donate Now</a>
+      </div>
+    </section>
+
+    <section id="about" class="about slide-section">
+      <h2>About Us</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            We are dedicated to saving lives by ensuring a safe and adequate
+            blood supply for our community. Our mission is to connect generous
+            donors with patients in need.
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat-box">
+            <i class="fas fa-users"></i>
+            <h3>5000+</h3>
+            <p>Donors</p>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-hospital"></i>
+            <h3>100+</h3>
+            <p>Hospitals Served</p>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-heart"></i>
+            <h3>10000+</h3>
+            <p>Lives Saved</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="donate" class="donate slide-section">
+      <h2>Donate Blood</h2>
+      <div class="donate-content">
+        <form class="donate-form" onsubmit="handleDonate(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <input
+                type="text"
+                name="fullname"
+                placeholder="Full Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="number"
+                name="age"
+                placeholder="Age"
+                min="18"
+                max="100"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <select name="rh" required>
+                <option value="">Rh Factor</option>
+                <option value="+">Positive (Rh+)</option>
+                <option value="-">Negative (Rh-)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <select name="bloodgroup" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <select name="zone" required>
+                <option value="">Select Zone</option>
+                <option value="1">Zone 1 - Serampore</option>
+                <option value="2">Zone 2 - Chinsurah</option>
+                <option value="3">Zone 3 - Chandannagar</option>
+                <option value="4">Zone 4 - Arambagh</option>
+                <option value="5">Zone 5 - Dhaniakhali</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <input type="email" name="email" placeholder="Email" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <textarea
+              name="address"
+              placeholder="Full Address"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-button">Register as Donor</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="zones" class="zones">
+      <h2>Blood Bank Zones in Hooghly</h2>
+      <div class="zones-content">
+        <div class="zone-grid">
+          <!-- Zone 1 - Serampore -->
+          <div class="zone-card">
+            <div class="zone-header">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Zone 1 - Serampore</h3>
+            </div>
+            <div class="zone-details">
+              <p><strong>Main Center:</strong> Serampore Blood Bank</p>
+              <p><strong>Areas Covered:</strong></p>
+              <ul>
+                <li>Serampore Town</li>
+                <li>Rishra</li>
+                <li>Konnagar</li>
+                <li>Uttarpara</li>
+              </ul>
+              <p><strong>Contact:</strong> +91 98765-43210</p>
+              <button
+                class="map-btn"
+                onclick="window.open('https://goo.gl/maps/serampore')"
+              >
+                <i class="fas fa-map"></i> View on Map
+              </button>
+            </div>
+          </div>
+
+          <!-- Zone 2 - Chinsurah -->
+          <div class="zone-card">
+            <div class="zone-header">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Zone 2 - Chinsurah</h3>
+            </div>
+            <div class="zone-details">
+              <p><strong>Main Center:</strong> District Blood Bank</p>
+              <p><strong>Areas Covered:</strong></p>
+              <ul>
+                <li>Chinsurah</li>
+                <li>Bandel</li>
+                <li>Hooghly</li>
+                <li>Mogra</li>
+              </ul>
+              <p><strong>Contact:</strong> +91 98765-43211</p>
+              <button
+                class="map-btn"
+                onclick="window.open('https://goo.gl/maps/chinsurah')"
+              >
+                <i class="fas fa-map"></i> View on Map
+              </button>
+            </div>
+          </div>
+
+          <!-- Zone 3 - Chandannagar -->
+          <div class="zone-card">
+            <div class="zone-header">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Zone 3 - Chandannagar</h3>
+            </div>
+            <div class="zone-details">
+              <p><strong>Main Center:</strong> Chandannagar Blood Center</p>
+              <p><strong>Areas Covered:</strong></p>
+              <ul>
+                <li>Chandannagar</li>
+                <li>Bhadreswar</li>
+                <li>Champdany</li>
+                <li>Baidyabati</li>
+              </ul>
+              <p><strong>Contact:</strong> +91 98765-43212</p>
+              <button
+                class="map-btn"
+                onclick="window.open('https://goo.gl/maps/chandannagar')"
+              >
+                <i class="fas fa-map"></i> View on Map
+              </button>
+            </div>
+          </div>
+
+          <!-- Zone 4 - Arambagh -->
+          <div class="zone-card">
+            <div class="zone-header">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Zone 4 - Arambagh</h3>
+            </div>
+            <div class="zone-details">
+              <p><strong>Main Center:</strong> Arambagh Medical Center</p>
+              <p><strong>Areas Covered:</strong></p>
+              <ul>
+                <li>Arambagh</li>
+                <li>Khanakul</li>
+                <li>Goghat</li>
+                <li>Pursurah</li>
+              </ul>
+              <p><strong>Contact:</strong> +91 98765-43213</p>
+              <button
+                class="map-btn"
+                onclick="window.open('https://goo.gl/maps/arambagh')"
+              >
+                <i class="fas fa-map"></i> View on Map
+              </button>
+            </div>
+          </div>
+
+          <!-- Zone 5 - Dhaniakhali -->
+          <div class="zone-card">
+            <div class="zone-header">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Zone 5 - Dhaniakhali</h3>
+            </div>
+            <div class="zone-details">
+              <p><strong>Main Center:</strong> Rural Blood Bank</p>
+              <p><strong>Areas Covered:</strong></p>
+              <ul>
+                <li>Dhaniakhali</li>
+                <li>Pandua</li>
+                <li>Polba</li>
+                <li>Tarakeswar</li>
+              </ul>
+              <p><strong>Contact:</strong> +91 98765-43214</p>
+              <button
+                class="map-btn"
+                onclick="window.open('https://goo.gl/maps/dhaniakhali')"
+              >
+                <i class="fas fa-map"></i> View on Map
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact slide-section">
+      <h2>Contact Us</h2>
+      <div class="contact-content">
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <p>+1 234 567 890</p>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <p>info@lifestreambank.com</p>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-location-dot"></i>
+            <p>123 Medical Center Dr, Healthcare City</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>&copy; 2025 LifeStream Blood Bank. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Modal functionality
+      const loginModal = document.getElementById("loginModal");
+      const signupModal = document.getElementById("signupModal");
+      const contactForm = document.getElementById("contactForm");
+      const otpForm = document.getElementById("otpForm");
+      let resendTimer;
+      let currentLoginMethod = "email";
+      let userContact = "";
+
+      function openLoginModal() {
+        loginModal.style.display = "block";
+        signupModal.style.display = "none";
+        contactForm.style.display = "block";
+        otpForm.style.display = "none";
+        document.getElementById("loginEmail").value = "";
+        document.getElementById("loginMobile").value = "";
+        if (document.getElementById("otpInput")) {
+          document.getElementById("otpInput").value = "";
+        }
+        toggleLoginMethod("email"); // Reset to email login by default
+      }
+
+      function closeLoginModal() {
+        loginModal.style.display = "none";
+        clearInterval(resendTimer);
+      }
+
+      function openSignupModal() {
+        signupModal.style.display = "block";
+        loginModal.style.display = "none";
+      }
+
+      function closeSignupModal() {
+        signupModal.style.display = "none";
+      }
+
+      // Toggle between email and mobile login
+      function toggleLoginMethod(method) {
+        currentLoginMethod = method;
+        const emailField = document.getElementById("emailField");
+        const mobileField = document.getElementById("mobileField");
+        const toggleBtns = document.querySelectorAll(".toggle-btn");
+
+        if (method === "email") {
+          emailField.style.display = "block";
+          mobileField.style.display = "none";
+          document.getElementById("loginEmail").required = true;
+          document.getElementById("loginMobile").required = false;
+        } else {
+          emailField.style.display = "none";
+          mobileField.style.display = "block";
+          document.getElementById("loginEmail").required = false;
+          document.getElementById("loginMobile").required = true;
+        }
+
+        // Update toggle button styles
+        toggleBtns.forEach((btn) => {
+          if (btn.textContent.toLowerCase() === method) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        if (event.target === loginModal) {
+          closeLoginModal();
+        }
+        if (event.target === signupModal) {
+          closeSignupModal();
+        }
+      };
+
+      // Handle contact submission
+      function handleContactSubmit(event) {
+        event.preventDefault();
+
+        if (currentLoginMethod === "email") {
+          userContact = document.getElementById("loginEmail").value;
+        } else {
+          userContact = document.getElementById("loginMobile").value;
+        }
+
+        // Here you would typically make an API call to your backend to send OTP
+        console.log(`Sending OTP to ${currentLoginMethod}:`, userContact);
+
+        contactForm.style.display = "none";
+        otpForm.style.display = "block";
+
+        // Update OTP sent message
+        document.getElementById(
+          "otpSentTo"
+        ).textContent = `OTP sent to your ${currentLoginMethod}: ${maskContact(
+          userContact
+        )}`;
+
+        // Start the resend timer
+        startResendTimer();
+
+        // Simulate OTP sent
+        alert(`OTP has been sent to your ${currentLoginMethod}`);
+      }
+
+      // Mask contact information for privacy
+      function maskContact(contact) {
+        if (currentLoginMethod === "email") {
+          const [username, domain] = contact.split("@");
+          return `${username.charAt(0)}${"*".repeat(
+            username.length - 2
+          )}${username.charAt(username.length - 1)}@${domain}`;
+        } else {
+          return `${"*".repeat(6)}${contact.slice(-4)}`;
+        }
+      }
+
+      // Handle OTP verification
+      function handleOTPVerification(event) {
+        event.preventDefault();
+        const otp = document.getElementById("otpInput").value;
+
+        console.log(`Verifying OTP for ${currentLoginMethod}:`, userContact);
+
+        // Simulate successful verification
+        if (otp === "123456") {
+          alert("Login successful!");
+          closeLoginModal();
+        } else {
+          alert("Invalid OTP. Please try again.");
+        }
+      }
+
+      // Resend OTP functionality
+      function resendOTP() {
+        console.log(`Resending OTP to ${currentLoginMethod}:`, userContact);
+
+        const resendBtn = document.querySelector(".resend-btn");
+        resendBtn.disabled = true;
+        startResendTimer();
+
+        alert(`New OTP has been sent to your ${currentLoginMethod}`);
+      }
+
+      // Timer functionality for resend OTP
+      function startResendTimer() {
+        let timeLeft = 30; // 30 seconds cooldown
+        const resendBtn = document.querySelector(".resend-btn");
+        resendBtn.disabled = true;
+
+        clearInterval(resendTimer);
+        resendTimer = setInterval(() => {
+          if (timeLeft <= 0) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = "Resend OTP";
+            clearInterval(resendTimer);
+          } else {
+            resendBtn.textContent = `Resend OTP (${timeLeft}s)`;
+            timeLeft--;
+          }
+        }, 1000);
+      }
+
+      function handleSignup(event) {
+        event.preventDefault();
+        const form = event.target;
+        const name = form.querySelector('input[type="text"]').value;
+        const email = form.querySelector('input[type="email"]').value;
+        const password = form.querySelectorAll('input[type="password"]')[0]
+          .value;
+        const confirmPassword = form.querySelectorAll(
+          'input[type="password"]'
+        )[1].value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+
+        // Here you would typically send this data to your backend server
+        console.log("Signup attempt:", { name, email, password });
+        alert(
+          "Signup functionality will be implemented with backend integration"
+        );
+      }
+
+      // Handle donate form submission (client-side)
+      function handleDonate(event) {
+        event.preventDefault();
+        const form = event.target;
+        const data = {
+          fullname: form.fullname.value,
+          age: form.age.value,
+          gender: form.gender.value,
+          rh: form.rh.value,
+          bloodgroup: form.bloodgroup.value,
+          zone: form.zone.value,
+          phone: form.phone.value,
+          email: form.email.value,
+          address: form.address.value,
+        };
+
+        // Simple client-side check
+        console.log("Donor registration:", data);
+        alert("Thanks for registering as a donor. We will contact you soon.");
+        form.reset();
+      }
+
+      // Ensure background video plays on mobile devices
+      document.addEventListener("DOMContentLoaded", function () {
+        const bgVideo = document.getElementById("bgVideo");
+        bgVideo.play().catch(function (error) {
+          console.log("Video autoplay failed:", error);
+        });
+      });
+
+      // Slide-in animation using IntersectionObserver
+      document.addEventListener("DOMContentLoaded", function () {
+        const sections = document.querySelectorAll(".slide-section");
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in-view");
+              } else {
+                entry.target.classList.remove("in-view");
+              }
+            });
+          },
+          { threshold: 0.15 }
+        );
+
+        sections.forEach((s) => io.observe(s));
+
+        // Highlight navigation links when their section is in view
+        const navLinks = document.querySelectorAll(".nav-links a");
+        const sectionsForNav = document.querySelectorAll("section[id]");
+        const navObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const id = entry.target.id;
+              const navLink = document.querySelector(
+                `.nav-links a[href="#${id}"]`
+              );
+              if (entry.isIntersecting) {
+                navLinks.forEach((a) => a.classList.remove("active"));
+                if (navLink) navLink.classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.6 }
+        );
+
+        sectionsForNav.forEach((s) => navObserver.observe(s));
+      });
+    </script>
+  </body>
+</html>
