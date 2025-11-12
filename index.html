@@ -11,21 +11,59 @@
     />
   </head>
   <body>
+    <!-- RH Indicator -->
+    <div class="rh-indicator">
+      <button
+        class="rh-btn rh-positive active"
+        onclick="toggleRH('positive')"
+        title="RH Positive"
+      >
+        <i class="fas fa-plus"></i> RH+
+      </button>
+      <button
+        class="rh-btn rh-negative"
+        onclick="toggleRH('negative')"
+        title="RH Negative"
+      >
+        <i class="fas fa-minus"></i> RH-
+      </button>
+    </div>
+
     <header>
       <nav>
         <div class="logo">
           <i class="fas fa-tint"></i>
-          <span>LifeStream Blood Bank</span>
+          <span>Life Stream Blood Bank</span>
         </div>
+
+        <!-- Hamburger Menu Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <!-- Menu Overlay -->
+        <div class="menu-overlay" onclick="closeMenu()"></div>
+
         <ul class="nav-links">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#donate">Donate</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li>
-            <button class="login-btn" onclick="openLoginModal()">Login</button>
-          </li>
+          <li><a href="#home" onclick="closeMenu()">Home</a></li>
+          <li><a href="#about" onclick="closeMenu()">About</a></li>
+          <li><a href="#donate" onclick="closeMenu()">Donate</a></li>
+          <li><a href="#enquiry" onclick="closeMenu()">Enquiry</a></li>
+          <li><a href="#cart" onclick="closeMenu()">Cart</a></li>
+          <li><a href="#track" onclick="closeMenu()">Track</a></li>
+          <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
         </ul>
+
+        <div class="nav-actions">
+          <a href="admin.html" class="admin-link">
+            <i class="fas fa-user-shield"></i> Admin
+          </a>
+          <button class="login-btn" onclick="openLoginModal()">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+        </div>
       </nav>
 
       <!-- Login Modal -->
@@ -140,7 +178,7 @@
       <div class="hero-content">
         <h1>Save Lives Through Blood Donation</h1>
         <p>Your donation can make a difference in someone's life</p>
-        <a href="#donate" class="cta-button">Donate Now</a>
+        <a href="#enquiry" class="cta-button">Submit Enquiry</a>
       </div>
     </section>
 
@@ -402,6 +440,505 @@
       </div>
     </section>
 
+    <section id="enquiry" class="enquiry slide-section">
+      <h2>Submit Enquiry / Blood Request</h2>
+      <div class="enquiry-content">
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <p>Submit Enquiry</p>
+          </div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <p>Validation</p>
+          </div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <p>Categorization</p>
+          </div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <p>Routing</p>
+          </div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">
+            <div class="step-number">5</div>
+            <p>Response Prep</p>
+          </div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">
+            <div class="step-number">6</div>
+            <p>Delivery</p>
+          </div>
+        </div>
+
+        <form class="enquiry-form" onsubmit="handleEnquiry(event)">
+          <h3>Submit Your Enquiry</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="enquiryName">Full Name *</label>
+              <input type="text" id="enquiryName" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="enquiryEmail">Email *</label>
+              <input type="email" id="enquiryEmail" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="enquiryPhone">Phone Number *</label>
+              <input
+                type="tel"
+                id="enquiryPhone"
+                name="phone"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="enquiryType">Enquiry Type *</label>
+              <select
+                id="enquiryType"
+                name="type"
+                required
+                onchange="updateEnquiryFields(this.value)"
+              >
+                <option value="">Select Type</option>
+                <option value="blood-request">Blood Request (Urgent)</option>
+                <option value="donation-query">Donation Query</option>
+                <option value="appointment">Schedule Appointment</option>
+                <option value="general">General Enquiry</option>
+                <option value="complaint">Complaint/Feedback</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Blood Request Specific Fields -->
+          <div id="bloodRequestFields" style="display: none">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="patientName">Patient Name *</label>
+                <input type="text" id="patientName" name="patientName" />
+              </div>
+
+              <div class="form-group">
+                <label for="bloodType">Blood Type Required *</label>
+                <select id="bloodType" name="bloodType">
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="unitsRequired">Units Required *</label>
+                <input
+                  type="number"
+                  id="unitsRequired"
+                  name="unitsRequired"
+                  min="1"
+                  max="10"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="urgencyLevel">Urgency Level *</label>
+                <select id="urgencyLevel" name="urgency">
+                  <option value="critical">Critical (Within 2 hours)</option>
+                  <option value="urgent">Urgent (Within 24 hours)</option>
+                  <option value="normal">Normal (Within 3 days)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="hospital">Hospital Name *</label>
+                <input type="text" id="hospital" name="hospital" />
+              </div>
+
+              <div class="form-group">
+                <label for="requiredBy">Required By Date *</label>
+                <input type="date" id="requiredBy" name="requiredBy" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointment Specific Fields -->
+          <div id="appointmentFields" style="display: none">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="appointmentDate">Preferred Date *</label>
+                <input
+                  type="date"
+                  id="appointmentDate"
+                  name="appointmentDate"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="appointmentTime">Preferred Time *</label>
+                <select id="appointmentTime" name="appointmentTime">
+                  <option value="">Select Time</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="appointmentZone">Preferred Zone *</label>
+                <select id="appointmentZone" name="appointmentZone">
+                  <option value="">Select Zone</option>
+                  <option value="1">Zone 1 - Serampore</option>
+                  <option value="2">Zone 2 - Chinsurah</option>
+                  <option value="3">Zone 3 - Chandannagar</option>
+                  <option value="4">Zone 4 - Arambagh</option>
+                  <option value="5">Zone 5 - Dhaniakhali</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="enquiryMessage">Message / Additional Details *</label>
+            <textarea
+              id="enquiryMessage"
+              name="message"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div id="enquiryStatus" class="enquiry-status" style="display: none">
+            <div class="status-indicator">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span id="statusText">Processing your enquiry...</span>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-button">
+            <i class="fas fa-paper-plane"></i> Submit Enquiry
+          </button>
+        </form>
+
+        <div class="enquiry-info">
+          <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+          <ul>
+            <li>
+              <strong>Step 1:</strong> Submit your enquiry with all required
+              details
+            </li>
+            <li>
+              <strong>Step 2:</strong> System validates your information
+              automatically
+            </li>
+            <li>
+              <strong>Step 3:</strong> Enquiry is categorized based on type and
+              urgency
+            </li>
+            <li>
+              <strong>Step 4:</strong> Routed to appropriate department/zone
+            </li>
+            <li>
+              <strong>Step 5:</strong> Our team prepares a detailed response
+            </li>
+            <li>
+              <strong>Step 6:</strong> Response delivered to you via email/SMS
+            </li>
+          </ul>
+          <p class="response-time">
+            <i class="fas fa-clock"></i>
+            <strong>Response Time:</strong> Critical requests within 2 hours,
+            others within 24 hours
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cart and Payment Section -->
+    <section id="cart" class="cart slide-section">
+      <h2>Blood Request Cart & Payment</h2>
+
+      <div class="cart-container">
+        <!-- Blood Inventory Display -->
+        <div class="blood-inventory-section">
+          <h3><i class="fas fa-tint"></i> Available Blood Units</h3>
+          <div class="blood-inventory-grid" id="bloodInventoryGrid">
+            <!-- Blood type cards will be generated here -->
+          </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div class="cart-section">
+          <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+            <span class="cart-count" id="cartCount">0</span>
+          </div>
+
+          <div class="cart-items" id="cartItems">
+            <div class="empty-cart">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Your cart is empty</p>
+              <p class="empty-cart-subtitle">
+                Add blood units from the inventory above
+              </p>
+            </div>
+          </div>
+
+          <div class="cart-summary" id="cartSummary" style="display: none">
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="subtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+              <span>Processing Fee:</span>
+              <span id="processingFee">₹0</span>
+            </div>
+            <div class="summary-row">
+              <span>GST (18%):</span>
+              <span id="gstAmount">₹0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span id="totalAmount">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="openPaymentModal()">
+              <i class="fas fa-credit-card"></i> Proceed to Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+      <div class="modal-content payment-modal-content">
+        <span class="close" onclick="closePaymentModal()">&times;</span>
+        <h2><i class="fas fa-credit-card"></i> Payment Details</h2>
+
+        <div class="payment-summary">
+          <h3>Order Summary</h3>
+          <div id="paymentOrderSummary"></div>
+          <div class="payment-total">
+            <strong>Total Amount:</strong>
+            <strong id="paymentTotalAmount">₹0</strong>
+          </div>
+        </div>
+
+        <form id="paymentForm" onsubmit="handlePayment(event)">
+          <div class="payment-tabs">
+            <button
+              type="button"
+              class="payment-tab active"
+              onclick="switchPaymentMethod('card')"
+            >
+              <i class="fas fa-credit-card"></i> Card
+            </button>
+            <button
+              type="button"
+              class="payment-tab"
+              onclick="switchPaymentMethod('upi')"
+            >
+              <i class="fas fa-mobile-alt"></i> UPI
+            </button>
+            <button
+              type="button"
+              class="payment-tab"
+              onclick="switchPaymentMethod('netbanking')"
+            >
+              <i class="fas fa-university"></i> Net Banking
+            </button>
+          </div>
+
+          <!-- Card Payment -->
+          <div id="cardPayment" class="payment-method active">
+            <div class="form-group">
+              <label>Cardholder Name</label>
+              <input
+                type="text"
+                id="cardName"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Card Number</label>
+              <input
+                type="text"
+                id="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+                required
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiryDate"
+                  placeholder="MM/YY"
+                  maxlength="5"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input
+                  type="text"
+                  id="cvv"
+                  placeholder="123"
+                  maxlength="3"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI Payment -->
+          <div id="upiPayment" class="payment-method">
+            <div class="form-group">
+              <label>UPI ID</label>
+              <input type="text" id="upiId" placeholder="yourname@upi" />
+            </div>
+            <div class="qr-code-section">
+              <p>Or scan QR code:</p>
+              <div class="qr-placeholder">
+                <i class="fas fa-qrcode"></i>
+                <p>QR Code will appear here</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Net Banking -->
+          <div id="netbankingPayment" class="payment-method">
+            <div class="form-group">
+              <label>Select Bank</label>
+              <select id="bankName">
+                <option value="">Choose your bank</option>
+                <option value="sbi">State Bank of India</option>
+                <option value="hdfc">HDFC Bank</option>
+                <option value="icici">ICICI Bank</option>
+                <option value="axis">Axis Bank</option>
+                <option value="pnb">Punjab National Bank</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" required />
+              I agree to the terms and conditions
+            </label>
+          </div>
+
+          <button type="submit" class="payment-submit-btn">
+            <i class="fas fa-lock"></i> Pay Securely
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Track Section -->
+    <section id="track" class="track slide-section">
+      <h2><i class="fas fa-search"></i> Track Your Orders & Enquiries</h2>
+
+      <div class="track-container">
+        <!-- Track Search -->
+        <div class="track-search-section">
+          <h3>Enter Your Tracking Details</h3>
+          <div class="track-tabs">
+            <button class="track-tab active" onclick="switchTrackType('order')">
+              <i class="fas fa-box"></i> Track Order
+            </button>
+            <button class="track-tab" onclick="switchTrackType('enquiry')">
+              <i class="fas fa-question-circle"></i> Track Enquiry
+            </button>
+            <button class="track-tab" onclick="switchTrackType('donation')">
+              <i class="fas fa-tint"></i> Track Donation
+            </button>
+          </div>
+
+          <form id="trackForm" onsubmit="handleTrack(event)">
+            <div class="track-input-group">
+              <input
+                type="text"
+                id="trackingId"
+                placeholder="Enter Order ID (e.g., ORD1234567890)"
+                required
+              />
+              <button type="submit" class="track-btn">
+                <i class="fas fa-search"></i> Track Now
+              </button>
+            </div>
+            <p class="track-help-text">
+              <i class="fas fa-info-circle"></i>
+              You can find your tracking ID in the confirmation email or SMS
+            </p>
+          </form>
+        </div>
+
+        <!-- Track Results -->
+        <div id="trackResults" class="track-results" style="display: none">
+          <!-- Results will be displayed here -->
+        </div>
+
+        <!-- My Orders Section -->
+        <div class="my-items-section">
+          <h3><i class="fas fa-history"></i> Recent Activity</h3>
+
+          <div class="activity-tabs">
+            <button
+              class="activity-tab active"
+              onclick="showActivity('orders')"
+            >
+              My Orders
+            </button>
+            <button class="activity-tab" onclick="showActivity('enquiries')">
+              My Enquiries
+            </button>
+            <button class="activity-tab" onclick="showActivity('donations')">
+              My Donations
+            </button>
+          </div>
+
+          <div id="ordersActivity" class="activity-content active">
+            <div id="ordersList">
+              <!-- Orders will be loaded here -->
+            </div>
+          </div>
+
+          <div id="enquiriesActivity" class="activity-content">
+            <div id="enquiriesList">
+              <!-- Enquiries will be loaded here -->
+            </div>
+          </div>
+
+          <div id="donationsActivity" class="activity-content">
+            <div id="donationsList">
+              <!-- Donations will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="contact" class="contact slide-section">
       <h2>Contact Us</h2>
       <div class="contact-content">
@@ -434,6 +971,76 @@
     </footer>
 
     <script>
+      // RH Indicator functionality
+      let selectedRH = localStorage.getItem("selectedRH") || "positive";
+
+      function toggleRH(rhType) {
+        selectedRH = rhType;
+        localStorage.setItem("selectedRH", rhType);
+
+        // Update button states
+        document.querySelectorAll(".rh-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        if (rhType === "positive") {
+          document.querySelector(".rh-positive").classList.add("active");
+        } else {
+          document.querySelector(".rh-negative").classList.add("active");
+        }
+
+        // Show notification
+        showNotification(
+          `RH ${rhType === "positive" ? "Positive" : "Negative"} selected`
+        );
+      }
+
+      // Initialize RH selection on page load
+      window.addEventListener("DOMContentLoaded", function () {
+        if (selectedRH === "negative") {
+          document.querySelector(".rh-positive").classList.remove("active");
+          document.querySelector(".rh-negative").classList.add("active");
+        }
+      });
+
+      // Hamburger Menu functionality
+      function toggleMenu() {
+        const navLinks = document.querySelector(".nav-links");
+        const hamburger = document.querySelector(".hamburger");
+        const menuOverlay = document.querySelector(".menu-overlay");
+        navLinks.classList.toggle("active");
+        hamburger.classList.toggle("active");
+        menuOverlay.classList.toggle("active");
+
+        // Prevent body scroll when menu is open
+        if (navLinks.classList.contains("active")) {
+          document.body.style.overflow = "hidden";
+        } else {
+          document.body.style.overflow = "";
+        }
+      }
+
+      function closeMenu() {
+        const navLinks = document.querySelector(".nav-links");
+        const hamburger = document.querySelector(".hamburger");
+        const menuOverlay = document.querySelector(".menu-overlay");
+        navLinks.classList.remove("active");
+        hamburger.classList.remove("active");
+        menuOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      // Close menu when clicking outside
+      window.addEventListener("click", function (e) {
+        const navLinks = document.querySelector(".nav-links");
+        const hamburger = document.querySelector(".hamburger");
+        const nav = document.querySelector("nav");
+
+        if (!nav.contains(e.target) && navLinks.classList.contains("active")) {
+          closeMenu();
+        }
+      });
+
       // Modal functionality
       const loginModal = document.getElementById("loginModal");
       const signupModal = document.getElementById("signupModal");
@@ -634,11 +1241,18 @@
           phone: form.phone.value,
           email: form.email.value,
           address: form.address.value,
+          registeredDate: new Date().toISOString().split("T")[0],
         };
 
-        // Simple client-side check
+        // Save to localStorage for admin panel
+        let donors = JSON.parse(localStorage.getItem("donors")) || [];
+        donors.push(data);
+        localStorage.setItem("donors", JSON.stringify(donors));
+
         console.log("Donor registration:", data);
-        alert("Thanks for registering as a donor. We will contact you soon.");
+        alert(
+          "Thanks for registering as a donor! Your registration has been saved. We will contact you soon."
+        );
         form.reset();
       }
 
@@ -689,6 +1303,1049 @@
 
         sectionsForNav.forEach((s) => navObserver.observe(s));
       });
+
+      // Enquiry Form Functions
+      function updateEnquiryFields(type) {
+        const bloodRequestFields =
+          document.getElementById("bloodRequestFields");
+        const appointmentFields = document.getElementById("appointmentFields");
+
+        // Hide all conditional fields
+        bloodRequestFields.style.display = "none";
+        appointmentFields.style.display = "none";
+
+        // Show relevant fields based on type
+        if (type === "blood-request") {
+          bloodRequestFields.style.display = "block";
+          // Make blood request fields required
+          document.getElementById("patientName").required = true;
+          document.getElementById("bloodType").required = true;
+          document.getElementById("unitsRequired").required = true;
+          document.getElementById("hospital").required = true;
+          document.getElementById("requiredBy").required = true;
+        } else if (type === "appointment") {
+          appointmentFields.style.display = "block";
+          // Make appointment fields required
+          document.getElementById("appointmentDate").required = true;
+          document.getElementById("appointmentTime").required = true;
+          document.getElementById("appointmentZone").required = true;
+        } else {
+          // Remove required from conditional fields
+          document.getElementById("patientName").required = false;
+          document.getElementById("bloodType").required = false;
+          document.getElementById("unitsRequired").required = false;
+          document.getElementById("hospital").required = false;
+          document.getElementById("requiredBy").required = false;
+          document.getElementById("appointmentDate").required = false;
+          document.getElementById("appointmentTime").required = false;
+          document.getElementById("appointmentZone").required = false;
+        }
+      }
+
+      function handleEnquiry(event) {
+        event.preventDefault();
+        const form = event.target;
+        const statusDiv = document.getElementById("enquiryStatus");
+        const statusText = document.getElementById("statusText");
+
+        // Step 1: User submits enquiry
+        statusDiv.style.display = "block";
+        statusText.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Step 1: Submitting your enquiry...';
+
+        setTimeout(() => {
+          // Step 2: Input validation
+          statusText.innerHTML =
+            '<i class="fas fa-check-circle"></i> Step 2: Validating information...';
+
+          setTimeout(() => {
+            // Step 3: Categorization
+            const enquiryType = form.type.value;
+            let category = "General";
+            let priority = "Normal";
+
+            if (enquiryType === "blood-request") {
+              category = "Blood Request";
+              priority = form.urgency ? form.urgency.value : "urgent";
+            } else if (enquiryType === "appointment") {
+              category = "Appointment";
+              priority = "Normal";
+            } else if (enquiryType === "complaint") {
+              category = "Complaint";
+              priority = "High";
+            }
+
+            statusText.innerHTML = `<i class="fas fa-tags"></i> Step 3: Categorized as "${category}" with "${priority}" priority...`;
+
+            setTimeout(() => {
+              // Step 4: Routing
+              let routedTo = "Main Office";
+              if (enquiryType === "blood-request") {
+                const zone = form.hospital
+                  ? "Zone based on hospital location"
+                  : "Central Blood Bank";
+                routedTo = zone;
+              } else if (
+                enquiryType === "appointment" &&
+                form.appointmentZone
+              ) {
+                routedTo = `Zone ${form.appointmentZone.value}`;
+              }
+
+              statusText.innerHTML = `<i class="fas fa-route"></i> Step 4: Routing to "${routedTo}"...`;
+
+              setTimeout(() => {
+                // Step 5: Response preparation
+                statusText.innerHTML =
+                  '<i class="fas fa-clipboard-check"></i> Step 5: Preparing response...';
+
+                setTimeout(() => {
+                  // Step 6: Response delivery
+                  const enquiryData = {
+                    id: "ENQ" + Date.now(),
+                    name: form.name.value,
+                    email: form.email.value,
+                    phone: form.phone.value,
+                    type: enquiryType,
+                    category: category,
+                    priority: priority,
+                    routedTo: routedTo,
+                    message: form.message.value,
+                    status: "pending",
+                    submittedDate: new Date().toISOString(),
+                    workflow: {
+                      submitted: true,
+                      validated: true,
+                      categorized: true,
+                      routed: true,
+                      responsePrepared: false,
+                      delivered: false,
+                    },
+                  };
+
+                  // Add blood request specific data
+                  if (enquiryType === "blood-request") {
+                    enquiryData.bloodRequest = {
+                      patientName: form.patientName.value,
+                      bloodType: form.bloodType.value,
+                      units: form.unitsRequired.value,
+                      urgency: form.urgency.value,
+                      hospital: form.hospital.value,
+                      requiredBy: form.requiredBy.value,
+                    };
+                  }
+
+                  // Add appointment specific data
+                  if (enquiryType === "appointment") {
+                    enquiryData.appointment = {
+                      date: form.appointmentDate.value,
+                      time: form.appointmentTime.value,
+                      zone: form.appointmentZone.value,
+                    };
+                  }
+
+                  // Save to localStorage
+                  let enquiries =
+                    JSON.parse(localStorage.getItem("enquiries")) || [];
+                  enquiries.push(enquiryData);
+                  localStorage.setItem("enquiries", JSON.stringify(enquiries));
+
+                  statusText.innerHTML = `<i class="fas fa-check-circle" style="color: #2ecc71;"></i> Step 6: Enquiry submitted successfully! Reference ID: ${enquiryData.id}`;
+
+                  setTimeout(() => {
+                    alert(
+                      `Enquiry submitted successfully!\\n\\nReference ID: ${enquiryData.id}\\nCategory: ${category}\\nPriority: ${priority}\\nRouted to: ${routedTo}\\n\\nYour enquiry has been saved and is now visible in the Admin Panel.\\nYou will receive a response via email and SMS within the stipulated time.`
+                    );
+                    form.reset();
+                    statusDiv.style.display = "none";
+                    updateEnquiryFields("");
+                  }, 2000);
+                }, 800);
+              }, 800);
+            }, 800);
+          }, 800);
+        }, 800);
+      }
+
+      // Cart and Payment System
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const bloodPrices = {
+        "A+": 850,
+        "A-": 950,
+        "B+": 850,
+        "B-": 950,
+        "O+": 800,
+        "O-": 1000,
+        "AB+": 900,
+        "AB-": 1050,
+      };
+
+      // Load blood inventory
+      function loadBloodInventory() {
+        const inventory = JSON.parse(localStorage.getItem("inventory")) || {
+          "A+": 45,
+          "A-": 12,
+          "B+": 38,
+          "B-": 8,
+          "AB+": 15,
+          "AB-": 5,
+          "O+": 52,
+          "O-": 10,
+        };
+
+        const grid = document.getElementById("bloodInventoryGrid");
+        grid.innerHTML = Object.keys(inventory)
+          .map(
+            (type) => `
+          <div class="blood-type-card">
+            <div class="blood-type-icon">
+              <i class="fas fa-tint"></i>
+              <span class="blood-type-label">${type}</span>
+            </div>
+            <div class="blood-type-info">
+              <p class="units-available">Available: <strong>${inventory[type]} units</strong></p>
+              <p class="price-per-unit">₹${bloodPrices[type]}/unit</p>
+            </div>
+            <div class="quantity-selector">
+              <button onclick="decreaseQuantity('${type}')" class="qty-btn">
+                <i class="fas fa-minus"></i>
+              </button>
+              <input type="number" id="qty-${type}" value="0" min="0" max="${inventory[type]}" 
+                     class="qty-input" onchange="updateQuantity('${type}', this.value)">
+              <button onclick="increaseQuantity('${type}')" class="qty-btn">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <button onclick="addToCart('${type}')" class="add-to-cart-btn">
+              <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function increaseQuantity(type) {
+        const input = document.getElementById(`qty-${type}`);
+        const max = parseInt(input.max);
+        if (parseInt(input.value) < max) {
+          input.value = parseInt(input.value) + 1;
+        }
+      }
+
+      function decreaseQuantity(type) {
+        const input = document.getElementById(`qty-${type}`);
+        if (parseInt(input.value) > 0) {
+          input.value = parseInt(input.value) - 1;
+        }
+      }
+
+      function updateQuantity(type, value) {
+        const input = document.getElementById(`qty-${type}`);
+        const max = parseInt(input.max);
+        if (value > max) input.value = max;
+        if (value < 0) input.value = 0;
+      }
+
+      function addToCart(type) {
+        const qtyInput = document.getElementById(`qty-${type}`);
+        const quantity = parseInt(qtyInput.value);
+
+        if (quantity <= 0) {
+          alert("Please select quantity");
+          return;
+        }
+
+        const existingItem = cart.find((item) => item.type === type);
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({
+            type: type,
+            quantity: quantity,
+            price: bloodPrices[type],
+          });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        qtyInput.value = 0;
+        updateCart();
+        showNotification(`Added ${quantity} unit(s) of ${type} to cart`);
+      }
+
+      function updateCart() {
+        const cartItemsDiv = document.getElementById("cartItems");
+        const cartCount = document.getElementById("cartCount");
+        const cartSummary = document.getElementById("cartSummary");
+
+        if (cart.length === 0) {
+          cartItemsDiv.innerHTML = `
+            <div class="empty-cart">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Your cart is empty</p>
+              <p class="empty-cart-subtitle">Add blood units from the inventory above</p>
+            </div>
+          `;
+          cartCount.textContent = "0";
+          cartSummary.style.display = "none";
+          return;
+        }
+
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+
+        cartItemsDiv.innerHTML = cart
+          .map(
+            (item, index) => `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <i class="fas fa-tint" style="color: #e74c3c;"></i>
+              <div>
+                <h4>Blood Type ${item.type}</h4>
+                <p class="item-price">₹${item.price} × ${item.quantity}</p>
+              </div>
+            </div>
+            <div class="cart-item-actions">
+              <span class="item-total">₹${item.price * item.quantity}</span>
+              <button onclick="removeFromCart(${index})" class="remove-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+
+        // Calculate totals
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const processingFee = 100;
+        const gst = (subtotal + processingFee) * 0.18;
+        const total = subtotal + processingFee + gst;
+
+        document.getElementById("subtotal").textContent = `₹${subtotal}`;
+        document.getElementById(
+          "processingFee"
+        ).textContent = `₹${processingFee}`;
+        document.getElementById("gstAmount").textContent = `₹${Math.round(
+          gst
+        )}`;
+        document.getElementById("totalAmount").textContent = `₹${Math.round(
+          total
+        )}`;
+
+        cartSummary.style.display = "block";
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCart();
+        showNotification("Item removed from cart");
+      }
+
+      function openPaymentModal() {
+        if (cart.length === 0) {
+          alert("Your cart is empty");
+          return;
+        }
+
+        const modal = document.getElementById("paymentModal");
+        const orderSummary = document.getElementById("paymentOrderSummary");
+
+        orderSummary.innerHTML = cart
+          .map(
+            (item) => `
+          <div class="payment-order-item">
+            <span>${item.type} Blood (${item.quantity} units)</span>
+            <span>₹${item.price * item.quantity}</span>
+          </div>
+        `
+          )
+          .join("");
+
+        const subtotal = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const processingFee = 100;
+        const gst = (subtotal + processingFee) * 0.18;
+        const total = subtotal + processingFee + gst;
+
+        orderSummary.innerHTML += `
+          <div class="payment-order-item">
+            <span>Processing Fee</span>
+            <span>₹${processingFee}</span>
+          </div>
+          <div class="payment-order-item">
+            <span>GST (18%)</span>
+            <span>₹${Math.round(gst)}</span>
+          </div>
+        `;
+
+        document.getElementById(
+          "paymentTotalAmount"
+        ).textContent = `₹${Math.round(total)}`;
+        modal.style.display = "block";
+      }
+
+      function closePaymentModal() {
+        document.getElementById("paymentModal").style.display = "none";
+        document.getElementById("paymentForm").reset();
+      }
+
+      function switchPaymentMethod(method) {
+        // Update tabs
+        document.querySelectorAll(".payment-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        event.target.closest(".payment-tab").classList.add("active");
+
+        // Update payment method sections
+        document.querySelectorAll(".payment-method").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(method + "Payment").classList.add("active");
+
+        // Update required fields
+        document.getElementById("cardName").required = method === "card";
+        document.getElementById("cardNumber").required = method === "card";
+        document.getElementById("expiryDate").required = method === "card";
+        document.getElementById("cvv").required = method === "card";
+        document.getElementById("upiId").required = method === "upi";
+        document.getElementById("bankName").required = method === "netbanking";
+      }
+
+      function handlePayment(event) {
+        event.preventDefault();
+
+        const paymentMethod = document
+          .querySelector(".payment-tab.active")
+          .textContent.trim();
+        const total = document.getElementById("paymentTotalAmount").textContent;
+
+        // Create order record
+        const order = {
+          id: "ORD" + Date.now(),
+          items: [...cart],
+          total: total,
+          paymentMethod: paymentMethod,
+          date: new Date().toISOString(),
+          status: "completed",
+        };
+
+        // Save order
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+        orders.push(order);
+        localStorage.setItem("orders", JSON.stringify(orders));
+
+        // Update inventory
+        const inventory = JSON.parse(localStorage.getItem("inventory")) || {
+          "A+": 45,
+          "A-": 12,
+          "B+": 38,
+          "B-": 8,
+          "AB+": 15,
+          "AB-": 5,
+          "O+": 52,
+          "O-": 10,
+        };
+
+        cart.forEach((item) => {
+          inventory[item.type] -= item.quantity;
+        });
+
+        localStorage.setItem("inventory", JSON.stringify(inventory));
+
+        // Clear cart
+        cart = [];
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Show success message
+        alert(
+          `Payment Successful!\\n\\nOrder ID: ${order.id}\\nAmount: ${total}\\nPayment Method: ${paymentMethod}\\n\\nYour blood units will be ready for pickup within 2 hours.`
+        );
+
+        closePaymentModal();
+        updateCart();
+        loadBloodInventory();
+      }
+
+      function showNotification(message) {
+        const notification = document.createElement("div");
+        notification.className = "notification";
+        notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.classList.add("show");
+        }, 100);
+
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }, 3000);
+      }
+
+      // Format card number
+      document.addEventListener("DOMContentLoaded", function () {
+        const cardNumberInput = document.getElementById("cardNumber");
+        if (cardNumberInput) {
+          cardNumberInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\s/g, "");
+            let formattedValue = value.match(/.{1,4}/g)?.join(" ") || value;
+            e.target.value = formattedValue;
+          });
+        }
+
+        const expiryInput = document.getElementById("expiryDate");
+        if (expiryInput) {
+          expiryInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "");
+            if (value.length >= 2) {
+              value = value.slice(0, 2) + "/" + value.slice(2, 4);
+            }
+            e.target.value = value;
+          });
+        }
+
+        // Load cart and inventory on page load
+        loadBloodInventory();
+        updateCart();
+        loadRecentActivity();
+      });
+
+      // Track System
+      let currentTrackType = "order";
+
+      function switchTrackType(type) {
+        currentTrackType = type;
+
+        // Update tabs
+        document.querySelectorAll(".track-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        event.target.closest(".track-tab").classList.add("active");
+
+        // Update placeholder
+        const trackingInput = document.getElementById("trackingId");
+        const placeholders = {
+          order: "Enter Order ID (e.g., ORD1234567890)",
+          enquiry: "Enter Enquiry ID (e.g., ENQ1234567890)",
+          donation: "Enter Donation ID (e.g., DON1234567890)",
+        };
+        trackingInput.placeholder = placeholders[type];
+        trackingInput.value = "";
+
+        // Hide results
+        document.getElementById("trackResults").style.display = "none";
+      }
+
+      function handleTrack(event) {
+        event.preventDefault();
+        const trackingId = document
+          .getElementById("trackingId")
+          .value.trim()
+          .toUpperCase();
+
+        let result = null;
+        let resultType = "";
+
+        if (currentTrackType === "order") {
+          const orders = JSON.parse(localStorage.getItem("orders")) || [];
+          result = orders.find((order) => order.id === trackingId);
+          resultType = "order";
+        } else if (currentTrackType === "enquiry") {
+          const enquiries = JSON.parse(localStorage.getItem("enquiries")) || [];
+          result = enquiries.find((enq) => enq.id === trackingId);
+          resultType = "enquiry";
+        } else if (currentTrackType === "donation") {
+          const donors = JSON.parse(localStorage.getItem("donors")) || [];
+          result = donors.find((donor) => donor.id === trackingId);
+          resultType = "donation";
+        }
+
+        displayTrackingResult(result, resultType, trackingId);
+      }
+
+      function displayTrackingResult(result, type, trackingId) {
+        const resultsDiv = document.getElementById("trackResults");
+
+        if (!result) {
+          resultsDiv.innerHTML = `
+            <div class="track-not-found">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h3>Not Found</h3>
+              <p>No ${type} found with ID: <strong>${trackingId}</strong></p>
+              <p class="help-text">Please check your ID and try again, or contact support for assistance.</p>
+            </div>
+          `;
+          resultsDiv.style.display = "block";
+          return;
+        }
+
+        let html = "";
+
+        if (type === "order") {
+          const statusSteps = [
+            { label: "Order Placed", icon: "check-circle", completed: true },
+            {
+              label: "Payment Confirmed",
+              icon: "credit-card",
+              completed: true,
+            },
+            {
+              label: "Preparing",
+              icon: "box",
+              completed: result.status !== "pending",
+            },
+            {
+              label: "Ready for Pickup",
+              icon: "check-double",
+              completed: result.status === "completed",
+            },
+          ];
+
+          html = `
+            <div class="track-result-card">
+              <div class="track-header">
+                <div>
+                  <h3><i class="fas fa-box"></i> Order Tracking</h3>
+                  <p class="track-id">Order ID: ${result.id}</p>
+                </div>
+                <span class="status-badge status-${result.status}">${
+            result.status
+          }</span>
+              </div>
+
+              <div class="tracking-timeline">
+                ${statusSteps
+                  .map(
+                    (step) => `
+                  <div class="timeline-item ${
+                    step.completed ? "completed" : ""
+                  }">
+                    <div class="timeline-icon">
+                      <i class="fas fa-${step.icon}"></i>
+                    </div>
+                    <div class="timeline-content">
+                      <h4>${step.label}</h4>
+                    </div>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+
+              <div class="track-details">
+                <h4>Order Details</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value">${new Date(
+                      result.date
+                    ).toLocaleString()}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Total Amount:</span>
+                    <span class="detail-value">${result.total}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value">${result.paymentMethod}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Items:</span>
+                    <span class="detail-value">${result.items
+                      .map((item) => `${item.type} (${item.quantity})`)
+                      .join(", ")}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="track-actions">
+                <button onclick="printTracking()" class="action-btn">
+                  <i class="fas fa-print"></i> Print
+                </button>
+                <button onclick="contactSupport('${
+                  result.id
+                }')" class="action-btn">
+                  <i class="fas fa-headset"></i> Contact Support
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (type === "enquiry") {
+          const workflowSteps = [
+            {
+              label: "Submitted",
+              completed: result.workflow?.submitted || false,
+            },
+            {
+              label: "Validated",
+              completed: result.workflow?.validated || false,
+            },
+            {
+              label: "Categorized",
+              completed: result.workflow?.categorized || false,
+            },
+            { label: "Routed", completed: result.workflow?.routed || false },
+            {
+              label: "Response Prepared",
+              completed: result.workflow?.responsePrepared || false,
+            },
+            {
+              label: "Delivered",
+              completed: result.workflow?.delivered || false,
+            },
+          ];
+
+          html = `
+            <div class="track-result-card">
+              <div class="track-header">
+                <div>
+                  <h3><i class="fas fa-question-circle"></i> Enquiry Tracking</h3>
+                  <p class="track-id">Enquiry ID: ${result.id}</p>
+                </div>
+                <span class="status-badge status-${result.status}">${
+            result.status
+          }</span>
+              </div>
+
+              <div class="tracking-timeline">
+                ${workflowSteps
+                  .map(
+                    (step) => `
+                  <div class="timeline-item ${
+                    step.completed ? "completed" : ""
+                  }">
+                    <div class="timeline-icon">
+                      <i class="fas fa-${
+                        step.completed ? "check-circle" : "circle"
+                      }"></i>
+                    </div>
+                    <div class="timeline-content">
+                      <h4>${step.label}</h4>
+                    </div>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+
+              <div class="track-details">
+                <h4>Enquiry Details</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${result.name}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Type:</span>
+                    <span class="detail-value">${result.type}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Category:</span>
+                    <span class="detail-value">${result.category}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Priority:</span>
+                    <span class="detail-value badge-${result.priority}">${
+            result.priority
+          }</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Submitted:</span>
+                    <span class="detail-value">${new Date(
+                      result.submittedDate
+                    ).toLocaleString()}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Routed To:</span>
+                    <span class="detail-value">${result.routedTo}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="track-actions">
+                <button onclick="printTracking()" class="action-btn">
+                  <i class="fas fa-print"></i> Print
+                </button>
+                <button onclick="contactSupport('${
+                  result.id
+                }')" class="action-btn">
+                  <i class="fas fa-headset"></i> Contact Support
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (type === "donation") {
+          html = `
+            <div class="track-result-card">
+              <div class="track-header">
+                <div>
+                  <h3><i class="fas fa-tint"></i> Donation Tracking</h3>
+                  <p class="track-id">Donation ID: ${result.id}</p>
+                </div>
+                <span class="status-badge status-completed">Completed</span>
+              </div>
+
+              <div class="track-details">
+                <h4>Donation Details</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Donor Name:</span>
+                    <span class="detail-value">${result.name}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Blood Group:</span>
+                    <span class="detail-value">${result.bloodGroup}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Age:</span>
+                    <span class="detail-value">${result.age}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Gender:</span>
+                    <span class="detail-value">${result.gender}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Zone:</span>
+                    <span class="detail-value">${result.zone}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Phone:</span>
+                    <span class="detail-value">${result.phone}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value">${new Date(
+                      result.date
+                    ).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div class="thank-you-message">
+                  <i class="fas fa-heart"></i>
+                  <p>Thank you for your generous donation! Your contribution helps save lives.</p>
+                </div>
+              </div>
+
+              <div class="track-actions">
+                <button onclick="printTracking()" class="action-btn">
+                  <i class="fas fa-print"></i> Print Certificate
+                </button>
+                <button onclick="contactSupport('${
+                  result.id
+                }')" class="action-btn">
+                  <i class="fas fa-headset"></i> Contact Support
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.style.display = "block";
+        resultsDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function showActivity(activityType) {
+        // Update tabs
+        document.querySelectorAll(".activity-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // Update content
+        document.querySelectorAll(".activity-content").forEach((content) => {
+          content.classList.remove("active");
+        });
+        document
+          .getElementById(activityType + "Activity")
+          .classList.add("active");
+      }
+
+      function loadRecentActivity() {
+        loadOrders();
+        loadEnquiries();
+        loadDonations();
+      }
+
+      function loadOrders() {
+        const orders = JSON.parse(localStorage.getItem("orders")) || [];
+        const ordersList = document.getElementById("ordersList");
+
+        if (orders.length === 0) {
+          ordersList.innerHTML = `
+            <div class="empty-activity">
+              <i class="fas fa-box-open"></i>
+              <p>No orders found</p>
+              <a href="#cart" class="cta-button">Start Shopping</a>
+            </div>
+          `;
+          return;
+        }
+
+        ordersList.innerHTML = orders
+          .slice()
+          .reverse()
+          .map(
+            (order) => `
+          <div class="activity-card">
+            <div class="activity-icon order-icon">
+              <i class="fas fa-box"></i>
+            </div>
+            <div class="activity-info">
+              <h4>Order ${order.id}</h4>
+              <p>${order.items.length} item(s) - ${order.total}</p>
+              <p class="activity-date">${new Date(
+                order.date
+              ).toLocaleString()}</p>
+            </div>
+            <div class="activity-actions">
+              <span class="status-badge status-${order.status}">${
+              order.status
+            }</span>
+              <button onclick="quickTrack('${
+                order.id
+              }', 'order')" class="quick-track-btn">
+                <i class="fas fa-search"></i> Track
+              </button>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function loadEnquiries() {
+        const enquiries = JSON.parse(localStorage.getItem("enquiries")) || [];
+        const enquiriesList = document.getElementById("enquiriesList");
+
+        if (enquiries.length === 0) {
+          enquiriesList.innerHTML = `
+            <div class="empty-activity">
+              <i class="fas fa-question-circle"></i>
+              <p>No enquiries found</p>
+              <a href="#enquiry" class="cta-button">Submit Enquiry</a>
+            </div>
+          `;
+          return;
+        }
+
+        enquiriesList.innerHTML = enquiries
+          .slice()
+          .reverse()
+          .map(
+            (enq) => `
+          <div class="activity-card">
+            <div class="activity-icon enquiry-icon">
+              <i class="fas fa-question-circle"></i>
+            </div>
+            <div class="activity-info">
+              <h4>${enq.id}</h4>
+              <p>${enq.category} - ${enq.type}</p>
+              <p class="activity-date">${new Date(
+                enq.submittedDate
+              ).toLocaleString()}</p>
+            </div>
+            <div class="activity-actions">
+              <span class="status-badge status-${enq.status}">${
+              enq.status
+            }</span>
+              <button onclick="quickTrack('${
+                enq.id
+              }', 'enquiry')" class="quick-track-btn">
+                <i class="fas fa-search"></i> Track
+              </button>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function loadDonations() {
+        const donors = JSON.parse(localStorage.getItem("donors")) || [];
+        const donationsList = document.getElementById("donationsList");
+
+        if (donors.length === 0) {
+          donationsList.innerHTML = `
+            <div class="empty-activity">
+              <i class="fas fa-tint"></i>
+              <p>No donations found</p>
+              <a href="#donate" class="cta-button">Donate Blood</a>
+            </div>
+          `;
+          return;
+        }
+
+        donationsList.innerHTML = donors
+          .slice()
+          .reverse()
+          .map(
+            (donor) => `
+          <div class="activity-card">
+            <div class="activity-icon donation-icon">
+              <i class="fas fa-tint"></i>
+            </div>
+            <div class="activity-info">
+              <h4>${donor.name}</h4>
+              <p>Blood Group: ${donor.bloodGroup} - ${donor.zone}</p>
+              <p class="activity-date">${new Date(
+                donor.date
+              ).toLocaleDateString()}</p>
+            </div>
+            <div class="activity-actions">
+              <span class="status-badge status-completed">Completed</span>
+              <button onclick="quickTrack('${
+                donor.id
+              }', 'donation')" class="quick-track-btn">
+                <i class="fas fa-search"></i> View
+              </button>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function quickTrack(id, type) {
+        document.getElementById("trackingId").value = id;
+        currentTrackType = type;
+
+        // Update active tab
+        document.querySelectorAll(".track-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        document
+          .querySelectorAll(".track-tab")
+          [type === "order" ? 0 : type === "enquiry" ? 1 : 2].classList.add(
+            "active"
+          );
+
+        // Trigger track
+        handleTrack({ preventDefault: () => {} });
+
+        // Scroll to results
+        document
+          .getElementById("trackResults")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function printTracking() {
+        window.print();
+      }
+
+      function contactSupport(id) {
+        alert(
+          `Contact Support\n\nReference ID: ${id}\n\nPhone: +1 234 567 890\nEmail: support@lifestreambank.com\n\nOur support team is available 24/7 to assist you.`
+        );
+      }
     </script>
   </body>
 </html>

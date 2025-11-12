@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Blood Bank Management</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+      <div class="login-container">
+        <div class="login-header">
+          <i class="fas fa-tint"></i>
+          <h1>Admin Panel</h1>
+          <p>Blood Bank Management System</p>
+        </div>
+        <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label for="adminUsername">Username</label>
+            <input
+              type="text"
+              id="adminUsername"
+              placeholder="Enter username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="adminPassword">Password</label>
+            <input
+              type="password"
+              id="adminPassword"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-primary">Login</button>
+          <p class="login-hint">Default credentials: admin / admin123</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <i class="fas fa-tint"></i>
+          <span>LifeStream</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a
+            href="#"
+            class="nav-item active"
+            onclick="showSection('dashboard')"
+          >
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('donors')">
+            <i class="fas fa-users"></i>
+            <span>Donors</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('appointments')">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Appointments</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('inventory')">
+            <i class="fas fa-box"></i>
+            <span>Blood Inventory</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('requests')">
+            <i class="fas fa-hand-holding-medical"></i>
+            <span>Blood Requests</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('enquiries')">
+            <i class="fas fa-envelope-open-text"></i>
+            <span>Enquiries</span>
+          </a>
+          <a href="#" class="nav-item" onclick="showSection('zones')">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Zones</span>
+          </a>
+          <a href="#" class="nav-item logout" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="content-header">
+          <h2 id="sectionTitle">Dashboard</h2>
+          <div class="header-actions">
+            <div class="user-info">
+              <i class="fas fa-user-circle"></i>
+              <span id="adminName">Admin</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="content-section active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #3498db">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalDonors">0</h3>
+                <p>Total Donors</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #2ecc71">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalAppointments">0</h3>
+                <p>Appointments</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #e74c3c">
+                <i class="fas fa-tint"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalBloodUnits">0</h3>
+                <p>Blood Units</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #f39c12">
+                <i class="fas fa-hand-holding-medical"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="totalRequests">0</h3>
+                <p>Pending Requests</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-charts">
+            <div class="chart-card">
+              <h3>Recent Donors</h3>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Blood Group</th>
+                      <th>Zone</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentDonorsTable">
+                    <tr>
+                      <td colspan="4" class="no-data">No recent donors</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <h3>Blood Type Distribution</h3>
+              <div id="bloodTypeChart" class="blood-type-chart">
+                <!-- Will be populated by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Donors Section -->
+        <section id="donorsSection" class="content-section">
+          <div class="section-header">
+            <button class="btn-primary" onclick="showAddDonorModal()">
+              <i class="fas fa-plus"></i> Add Donor
+            </button>
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Search donors..."
+                onkeyup="filterDonors(this.value)"
+              />
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Blood Group</th>
+                  <th>Rh Factor</th>
+                  <th>Zone</th>
+                  <th>Phone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="donorsTableBody">
+                <tr>
+                  <td colspan="9" class="no-data">No donors found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Appointments Section -->
+        <section id="appointmentsSection" class="content-section">
+          <div class="section-header">
+            <button class="btn-primary" onclick="showAddAppointmentModal()">
+              <i class="fas fa-plus"></i> New Appointment
+            </button>
+            <div class="filter-group">
+              <select onchange="filterAppointments(this.value)">
+                <option value="all">All Appointments</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Donor Name</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Zone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTableBody">
+                <tr>
+                  <td colspan="7" class="no-data">No appointments found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventorySection" class="content-section">
+          <div class="section-header">
+            <h3>Blood Inventory by Type</h3>
+          </div>
+          <div class="inventory-grid">
+            <div class="inventory-card" data-type="A+">
+              <div class="blood-type">A+</div>
+              <div class="units" id="unitsAP">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('A+', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('A+', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="A-">
+              <div class="blood-type">A-</div>
+              <div class="units" id="unitsAN">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('A-', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('A-', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="B+">
+              <div class="blood-type">B+</div>
+              <div class="units" id="unitsBP">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('B+', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('B+', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="B-">
+              <div class="blood-type">B-</div>
+              <div class="units" id="unitsBN">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('B-', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('B-', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="AB+">
+              <div class="blood-type">AB+</div>
+              <div class="units" id="unitsABP">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('AB+', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('AB+', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="AB-">
+              <div class="blood-type">AB-</div>
+              <div class="units" id="unitsABN">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('AB-', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('AB-', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="O+">
+              <div class="blood-type">O+</div>
+              <div class="units" id="unitsOP">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('O+', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('O+', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="inventory-card" data-type="O-">
+              <div class="blood-type">O-</div>
+              <div class="units" id="unitsON">0 Units</div>
+              <div class="actions">
+                <button onclick="updateInventory('O-', 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="updateInventory('O-', -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Requests Section -->
+        <section id="requestsSection" class="content-section">
+          <div class="section-header">
+            <h3>Blood Requests</h3>
+            <button class="btn-primary" onclick="showAddRequestModal()">
+              <i class="fas fa-plus"></i> New Request
+            </button>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient Name</th>
+                  <th>Blood Type</th>
+                  <th>Units</th>
+                  <th>Hospital</th>
+                  <th>Urgency</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody">
+                <tr>
+                  <td colspan="8" class="no-data">No requests found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Enquiries Section -->
+        <section id="enquiriesSection" class="content-section">
+          <div class="section-header">
+            <h3>All Enquiries</h3>
+            <div class="filter-group">
+              <select onchange="filterEnquiries(this.value)">
+                <option value="all">All Enquiries</option>
+                <option value="blood-request">Blood Requests</option>
+                <option value="appointment">Appointments</option>
+                <option value="donation-query">Donation Queries</option>
+                <option value="general">General</option>
+                <option value="complaint">Complaints</option>
+              </select>
+              <select onchange="filterEnquiriesByStatus(this.value)">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="responded">Responded</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Workflow Status</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="enquiriesTableBody">
+                <tr>
+                  <td colspan="9" class="no-data">No enquiries found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Zones Section -->
+        <section id="zonesSection" class="content-section">
+          <div class="zones-grid">
+            <div class="zone-card-admin">
+              <h3>Zone 1 - Serampore</h3>
+              <p>
+                <strong>Coverage:</strong> Serampore Town, Rishra, Konnagar,
+                Uttarpara
+              </p>
+              <p><strong>Donors:</strong> <span id="zone1Donors">0</span></p>
+              <p><strong>Contact:</strong> +91 98765-43210</p>
+            </div>
+            <div class="zone-card-admin">
+              <h3>Zone 2 - Chinsurah</h3>
+              <p>
+                <strong>Coverage:</strong> Chinsurah, Bandel, Hooghly, Mogra
+              </p>
+              <p><strong>Donors:</strong> <span id="zone2Donors">0</span></p>
+              <p><strong>Contact:</strong> +91 98765-43211</p>
+            </div>
+            <div class="zone-card-admin">
+              <h3>Zone 3 - Chandannagar</h3>
+              <p>
+                <strong>Coverage:</strong> Chandannagar, Bhadreswar, Champdany,
+                Baidyabati
+              </p>
+              <p><strong>Donors:</strong> <span id="zone3Donors">0</span></p>
+              <p><strong>Contact:</strong> +91 98765-43212</p>
+            </div>
+            <div class="zone-card-admin">
+              <h3>Zone 4 - Arambagh</h3>
+              <p>
+                <strong>Coverage:</strong> Arambagh, Khanakul, Goghat, Pursurah
+              </p>
+              <p><strong>Donors:</strong> <span id="zone4Donors">0</span></p>
+              <p><strong>Contact:</strong> +91 98765-43213</p>
+            </div>
+            <div class="zone-card-admin">
+              <h3>Zone 5 - Dhaniakhali</h3>
+              <p>
+                <strong>Coverage:</strong> Dhaniakhali, Pandua, Polba,
+                Tarakeswar
+              </p>
+              <p><strong>Donors:</strong> <span id="zone5Donors">0</span></p>
+              <p><strong>Contact:</strong> +91 98765-43214</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html>
