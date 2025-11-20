@@ -95,7 +95,7 @@ This project is licensed under the MIT License – see the [LICENSE](LICENSE) fi
 
 For queries or collaboration:
 
-- **Email:** yourname@example.com
+- **Email:** souravsanyal58231@gmail.com
 - **GitHub:** [sourav444-tec]
 
 ---
